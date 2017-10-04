@@ -28,9 +28,11 @@ class DataManager(object):
 
     def refresh(self):
         if self._db:
+
             self.toolsmanager = ToolsManager()
             tool_runs = self._db.getToolRuns()
             for run in tool_runs:
+                print(run)
                 self.toolsmanager.add(run)
 
 

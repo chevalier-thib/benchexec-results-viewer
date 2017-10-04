@@ -58,6 +58,7 @@ class QueryResult(object):
 class DatabaseConnection(object):
     def __init__(self, conffile = None):
         self._conn, self._cursor = _database_connect(conffile)
+        self._conn.autocommit(True)
 
     def __del__(self):
         # if creating the database failed, then the attribute _conn

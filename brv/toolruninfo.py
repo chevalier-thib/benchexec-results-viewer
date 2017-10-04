@@ -5,7 +5,7 @@ class ToolRunInfo(object):
     Represents one tool in a given version with provided settings and environment
     (like CPAchecker of version XX ran with these params on this data)
     """
-    def __init__(self, _id):
+    def __init__(self, _id = None):
         self._id = _id
 
     def getID(self):
@@ -35,6 +35,9 @@ class ToolRunInfo(object):
     def getStats(self):
         return self._stats
 
+    def getLimits(self):
+        return timelimit() + ' ' + memlimit()
+
     def addRun(self, r):
         """
         Add a run result to this tool run
@@ -42,7 +45,7 @@ class ToolRunInfo(object):
         self._runs.append(r)
 
 class DBToolRunInfo(ToolRunInfo):
-    def __init__(self, idtf = None, tool = None, vers = None, date = None,
+    def __init__(self, idtf, tool = None, vers = None, date = None,
                  opts = None, tlimit = None, mlimit = None):
         ToolRunInfo.__init__(self, idtf)
 
@@ -55,7 +58,7 @@ class DBToolRunInfo(ToolRunInfo):
         self._timelimit = tlimit
         self._memlimit = mlimit
         # list of results (RunInfo objects)
-        self._stats = None 
+        self._stats = None
         self._runs = []
 
     def tool(self):
@@ -184,6 +187,8 @@ class RunInfosTable(object):
 
             ## missing some tools? Fill in the gap
             l = len(infos)
+            assert l <= self._tools_num
+
             while l < self._tools_num:
                 infos.append(None)
 

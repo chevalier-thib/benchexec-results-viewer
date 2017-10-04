@@ -2,6 +2,7 @@
 
 from brv.runinfo import DirectRunInfo
 from brv.toolruninfo import ToolRunInfo
+from brv.utils import err
 
 import sys
 import os
@@ -20,27 +21,37 @@ def _parse_run_elem(run):
         title = col.getAttribute('title')
         value = col.getAttribute('value')
 
-        if title == 'status':
-            r._status = value
-            n += 1
-        elif title == 'cputime':
-            r._cputime = float(value[:-1])
-            n += 1
-        elif title == 'walltime':
-            r._walltime = float(value[:-1])
-            n += 1
-        elif title == 'memUsage':
-            r._memusage = value
-            n += 1
-        elif title == 'category':
-            r._resultcategory = value
-            n += 1
-        elif title == 'exitcode':
-            r._exitcode = value
-            n += 1
-        elif title == 'returnvalue':
-            r._returnvalue = value
-            n += 1
+        try:
+            if title == 'status':
+                r._status = value
+                n += 1
+            elif title == 'cputime':
+                if value:
+                    r._cputime = float(value[:-1])
+                else:
+                    r._cputime = None
+                n += 1
+            elif title == 'walltime':
+                if value:
+                    r._walltime = float(value[:-1])
+                else:
+                    r._walltime = None
+                n += 1
+            elif title == 'memUsage':
+                r._memusage = value
+                n += 1
+            elif title == 'category':
+                r._classification = value
+                n += 1
+            elif title == 'exitcode':
+                r._exitcode = value
+                n += 1
+            elif title == 'returnvalue':
+                r._returnvalue = value
+                n += 1
+        except ValueError as e:
+            err('Error parsing xml: '\
+                '{0}\nTitle: {1}, value: {2}'.format(str(e), title, value))
         #else:
         #    r.others[title] = value
 
@@ -104,6 +115,11 @@ class XMLParser(object):
         tool_info = _createToolRunInfo(xmlfl)
         tool_run_id = writer.getOrCreateToolInfoID(tool_info)
         benchmarks_set_id = writer.getOrCreateBenchmarksSetID(tool_info.block)
+
+        rcnt = writer.getRunCount(tool_run_id, benchmarks_set_id)
+        if rcnt and rcnt > 0:
+            print("Already have results for this xml file: {0}".format(filePath))
+            return
 
         assert tool_run_id is not None
         assert benchmarks_set_id is not None

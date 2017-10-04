@@ -43,7 +43,8 @@ class DatabaseWriter(DatabaseProxy):
 
     def getOrCreateToolInfoID(self, toolinfo):
         """
-        Add a new tool_run into database, return its ID
+        Add a new tool_run into database and return its ID.
+        If the tool already is in the database, return its ID.
         """
 
         tool_id = self._getToolID(toolinfo.tool, toolinfo.tool_version)
@@ -54,16 +55,12 @@ class DatabaseWriter(DatabaseProxy):
             (name, version) VALUES ('{0}', '{1}');
             """.format(toolinfo.tool, toolinfo.tool_version)
             self.query_noresult(q)
-
             tool_id = self.queryInt("SELECT LAST_INSERT_ID();")
 
         q = """
         SELECT id FROM tool_run WHERE
-          tool_id = '{0}' AND options = '{1}' AND memlimit = '{2}' AND
-          cpulimit = '{3}' AND date = '{4}';
-        """.format(tool_id, toolinfo.options, toolinfo.memlimit,
-                   toolinfo.timelimit, toolinfo.date)
-        self.query_noresult(q)
+          tool_id = '{0}' AND memlimit = '{1}' AND cpulimit = '{2}';
+        """.format(tool_id, toolinfo.memlimit, toolinfo.timelimit)
         tool_run_id = self.queryInt(q)
 
         if tool_run_id is None:
@@ -72,10 +69,10 @@ class DatabaseWriter(DatabaseProxy):
             INSERT INTO tool_run
               (tool_id, options, memlimit, cpulimit, date)
               VALUES ('{0}', '{1}', '{2}', '{3}', '{4}');
-            """.format(tool_id, toolinfo.options, toolinfo.memlimit,
-                       toolinfo.timelimit, toolinfo.date)
+            """.format(tool_id, toolinfo.options,
+                       toolinfo.memlimit, toolinfo.timelimit,
+                       toolinfo.date)
             self.query_noresult(q)
-
             tool_run_id = self.queryInt("SELECT LAST_INSERT_ID();")
 
         return tool_run_id
@@ -113,6 +110,7 @@ class DatabaseWriter(DatabaseProxy):
                    runinfo.fullname())
                     #FIXME: what return value?
         self.query_noresult(q)
+
 
     def deleteTool(self, tool_run_id):
         q = """

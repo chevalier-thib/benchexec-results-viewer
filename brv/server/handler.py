@@ -28,7 +28,10 @@ def _render_template(wfile, name, variables):
                                 loader=loader).encode('utf-8'))
 
 def showRoot(wfile, args):
-    _render_template(wfile, 'index.html', {'tools' : datamanager.getTools()})
+    opts = _parse_args(args)
+    if 'refresh' in opts:
+        datamanager.refresh()
+    _render_template(wfile, 'index.html', {'tools' : datamanager.getTools() })
 
 def _parse_args(args):
     opts = {}
@@ -49,6 +52,8 @@ def _get(p, idx):
 
 def showResults(wfile, args):
     opts = _parse_args(args)
+    if 'refresh' in opts:
+        datamanager.refresh()
     if not 'run' in opts:
         wfile.write('<h2>No runs of tools given</h2>')
         return
@@ -129,6 +134,9 @@ def showResults(wfile, args):
 
 def deleteTools(wfile, args):
     opts = _parse_args(args)
+    if 'refresh' in opts:
+        print("test")
+        datamanager.refresh()
     if not 'run' in opts:
         _render_template(wfile, 'delete.html', {'tools' : datamanager.getTools()})
         return

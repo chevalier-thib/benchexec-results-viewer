@@ -26,6 +26,14 @@ class DataManager(object):
             # XXX: NOT SUPPORTED YET. load the xml into database first
             pass
 
+    def refresh(self):
+        if self._db:
+            self.toolsmanager = ToolsManager()
+            tool_runs = self._db.getToolRuns()
+            for run in tool_runs:
+                self.toolsmanager.add(run)
+
+
     def getTools(self):
         return self.toolsmanager.getTools()
 

@@ -21,12 +21,21 @@
 <form action="/delete" style="margin-left: 1em">
   #for @tool in @tools:
     <h3>@tool.name:</h3>
-    #for @run in @tool.getRuns():
-    <!--<select name="run" multiple="multiple" style="width:50%;">-->
     <select name="run" multiple="multiple">
-      <option value=@run.getID()>[@run.date()] @run.tool() @run.tool_version()</option>
-    </select>
+    #for @run in @tool.getRuns():
+        <option style="
+        #if (@run.tags() % 2)
+          font-weight:bold;
+        #end
+        #if ((@run.tags() / 2) % 2)
+          font-style:italic;
+        #end
+        #if ((@run.tags() / 4 % 2) >= 1)
+          color:red;
+        #end
+        " value="@run.getID()">[@run.date()] @run.tool() @run.tool_version()</option>
     #end
+    </select>
   <br/>
   #end
   <input type="submit" onclick="return confirm('Are you sure you want to delete these runs ?');" value="Delete">

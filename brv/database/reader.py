@@ -50,7 +50,7 @@ class DatabaseReader(DatabaseProxy):
             info._options = r[4]
             info._timelimit = r[5]
             info._memlimit = r[6]
-            info._tags = 7
+            info._tags = r[7]
             info._description = r[8]
             info._tool_id = r[9]
 

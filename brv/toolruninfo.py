@@ -11,10 +11,19 @@ class ToolRunInfo(object):
     def getID(self):
         return self._id
 
+    def tool_id(self):
+        raise NotImplemented
+
     def tool(self):
         raise NotImplemented
 
     def tool_version(self):
+        raise NotImplemented
+
+    def tags(self):
+        raise NotImplemented
+
+    def description(self):
         raise NotImplemented
 
     def date(self):
@@ -46,26 +55,38 @@ class ToolRunInfo(object):
 
 class DBToolRunInfo(ToolRunInfo):
     def __init__(self, idtf, tool = None, vers = None, date = None,
-                 opts = None, tlimit = None, mlimit = None):
+                 opts = None, tlimit = None, mlimit = None, tags = None, desc = None, tid = None):
         ToolRunInfo.__init__(self, idtf)
 
         # a descriptor of this run
         # FIXME: store only the query and use the query
         self._tool = tool
         self._tool_version = vers
+        self._tags = tags
+        self._description = desc
         self._date = date
         self._options = opts
         self._timelimit = tlimit
         self._memlimit = mlimit
+        self._tags = tags
         # list of results (RunInfo objects)
         self._stats = None
         self._runs = []
+
+    def tool_id(self):
+        return self._tool_id
 
     def tool(self):
         return self._tool
 
     def tool_version(self):
         return self._tool_version
+
+    def tags(self):
+        return self._tags
+
+    def description(self):
+        return self._description
 
     def date(self):
         return self._date

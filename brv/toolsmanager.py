@@ -6,10 +6,11 @@ class ToolsManager(object):
     """
 
     class Tool(object):
-        def __init__(self, nm, ver):
+        def __init__(self, id, nm, ver):
+            self.id = id
             self.name = nm
             self.version = ver
-
+            
             self._runs = []
 
         def getRuns(self):
@@ -40,7 +41,7 @@ class ToolsManager(object):
         if found:
             found._runs.append(toolrun)
         else:
-            t = self.Tool(toolrun.tool(), toolrun.tool_version())
+            t = self.Tool(toolrun.tool_id(), toolrun.tool(), toolrun.tool_version())
             self._tools.append(t)
             t._runs.append(toolrun)
 

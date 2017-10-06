@@ -35,7 +35,7 @@ class DatabaseReader(DatabaseProxy):
 
     def getToolRuns(self):
         q = """
-        SELECT tool_run.id, tool.name, tool.version, date, options, cpulimit, memlimit
+        SELECT tool_run.id, tool.name, tool.version, date, options, cpulimit, memlimit, tag, description, tool.id
         FROM tool JOIN tool_run ON tool.id = tool_id;
         """
         res = self.query(q)
@@ -50,6 +50,9 @@ class DatabaseReader(DatabaseProxy):
             info._options = r[4]
             info._timelimit = r[5]
             info._memlimit = r[6]
+            info._tags = r[7]
+            info._description = r[8]
+            info._tool_id = r[9]
 
             ret.append(info)
 

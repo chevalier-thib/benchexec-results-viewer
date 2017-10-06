@@ -29,7 +29,7 @@ def _render_template(wfile, name, variables):
 
 def showRoot(wfile, args):
     datamanager.refresh()
-    _render_template(wfile, 'index.html', {'tools' : datamanager.getTools() })
+    _render_template(wfile, 'index.html', {'tools' : datamanager.getTools()})
 
 def _parse_args(args):
     opts = {}
@@ -175,6 +175,27 @@ def showBenchmarksResults(wfile, args):
                       'get' : _get,
                       'results': results})
 
+def showTools(wfile, args):
+    opts = _parse_args(args)
+    if 'desc' in opts:
+        from .. database.writer import DatabaseWriter
+        writer = DatabaseWriter('database.conf')
+        ftag = 0
+        for tag in opts['tags']:
+            if tag == "bold":
+                ftag += 1
+            if tag == "italics":
+                ftag += 2
+            if tag == "red":
+                ftag += 4
+        writer.setDesc(opts['run'][0], opts['desc'][0])
+        writer.setTags(opts['run'][0], ftag)
+    
+    datamanager.refresh()
+
+    _render_template(wfile, 'tools.html', {'tools' : datamanager.getTools() })
+    
+
 def sendStyle(wfile):
     f = open('html/style.css', 'rb')
     wfile.write(f.read())
@@ -185,6 +206,7 @@ handlers = {
     'results'           : showResults,
     'benchmarks_results': showBenchmarksResults,
     'delete'            : deleteTools,
+    'tools'             : showTools,
     'style.css'         : None, # we handle this specially
 }
 

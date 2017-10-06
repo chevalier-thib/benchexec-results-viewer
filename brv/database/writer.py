@@ -124,3 +124,21 @@ class DatabaseWriter(DatabaseProxy):
         WHERE id = '{0}';
         """.format(tool_run_id)
         self.query_noresult(q)
+
+    def setDesc(self, run_id, desc):
+        q = """
+        UPDATE tool_run
+        SET description = '{0}'
+        WHERE id = {1};
+        """.format(desc, run_id)
+        print(q)
+        self.query_noresult(q)
+    
+    def setTags(self, run_id, tags):
+        q = """
+        UPDATE tool_run
+        SET tag = '{0}'
+        WHERE id = {1};
+        """.format(tags, run_id)
+        print(q)
+        self.query_noresult(q)

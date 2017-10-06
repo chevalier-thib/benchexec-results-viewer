@@ -12,21 +12,41 @@
 <title>Benchexec results viewer</title>
 </head>
 
+<script>
+  function showTags(name) {
+    document.getElementById(name).style.display="block";
+  }
+  function hideTags(name) {
+    document.getElementById(name).style.display="none";
+  }
+</script>
+
 <body>
 
 #include("../header.html")
 <div id="content">
+  <p><a href="tools">Tool list</a><br/>
+     <a href="delete">Delete tools (admin)</a><p>
 <h2>Tools:</h2>
-
 <form action="/results" style="margin-left: 1em">
   #for @tool in @tools:
     <h3>@tool.name:</h3>
+    <select name="run" multiple="multiple">
     #for @run in @tool.getRuns():
     <!--<select name="run" multiple="multiple" style="width:50%;">-->
-    <select name="run" multiple="multiple">
-      <option value=@run.getID()>[@run.date()] @run.tool() @run.tool_version()</option>
-    </select>
+        <option style="
+        #if (@run.tags() % 2)
+          font-weight:bold;
+        #end
+        #if ((@run.tags() / 2) % 2)
+          font-style:italic;
+        #end
+        #if ((@run.tags() / 4 % 2) >= 1)
+          color:red;
+        #end
+        " value="@run.getID()">[@run.date()] @run.tool() @run.tool_version()</option>
     #end
+    </select>
   <br/>
   #end
   <input type="submit" value="Show!">

@@ -32,7 +32,6 @@ class DataManager(object):
             self.toolsmanager = ToolsManager()
             tool_runs = self._db.getToolRuns()
             for run in tool_runs:
-                print(run)
                 self.toolsmanager.add(run)
 
 

@@ -22,7 +22,13 @@
 <form action="/results" style="margin-left: 1em">
   #for @tool in @tools:
     <h3>@tool.name:</h3>
-    <select name="run" multiple="multiple">
+    <select name="run" multiple="multiple" size=
+      #if (@tool.nbRuns()>4)
+        4
+      #else
+        @tool.nbRuns()
+      #end
+      >
     #for @run in @tool.getRuns():
         <option style="
         #if (@run.tags() % 2)

@@ -16,6 +16,9 @@ class ToolsManager(object):
         def getRuns(self):
             return self._runs
 
+        def nbRuns(self):
+            return len(self._runs)
+
         def equals(self, oth):
             return self.version == oth.version and self.name == oth.name 
 

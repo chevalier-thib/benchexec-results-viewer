@@ -16,8 +16,7 @@
 
 #include("../header.html")
 <div id="content">
-  <p><a href="tools">Tool list</a><br/>
-     <a href="delete">Delete tools (admin)</a><p>
+  <p><a href="tools">Tool list</a></p>
 <h2>Tools:</h2>
 <form action="/results" style="margin-left: 1em">
   #for @name in @otherKeys:
@@ -60,6 +59,7 @@
     #end
   #end
   </select>
+  <br/>
   <input type="submit" value="Show!">
 </form>
 

@@ -20,7 +20,10 @@ function show(name) {
     document.getElementById(name).style.display="block";
 }
 function showField(name) {
-  document.getElementById(name).getElementsByClassName('field')[0].style.display="block";
+  if (document.getElementById(name).getElementsByClassName('field')[0].style.display == "none")
+    document.getElementById(name).getElementsByClassName('field')[0].style.display="block";
+  else
+    document.getElementById(name).getElementsByClassName('field')[0].style.display="none";
 }
 </script>
 

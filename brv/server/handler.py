@@ -153,6 +153,7 @@ def showBenchmarksResults(wfile, args):
         return
         
     results = list(datamanager.getRunInfos(bset_id, run_ids).getRows().items())
+    print(len(results))
     _render_template(wfile, 'benchmarks_results.html',
                      {'runs' : runs,
                       'get' : _get,
@@ -164,8 +165,12 @@ def showTools(wfile, args):
         from .. database.writer import DatabaseWriter
         writer = DatabaseWriter('database.conf')
         writer.deleteTool(int(opts['delete'][0]))
-
         writer.commit()
+
+        datamanager.refresh()
+        _render_template(wfile, 'tools.html', {'tools' : datamanager.getToolsByName(),
+                                           'toolKeys' : datamanager.getToolKeys() })
+        return
 
     if 'desc' in opts:
         from .. database.writer import DatabaseWriter

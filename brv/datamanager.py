@@ -38,6 +38,42 @@ class DataManager(object):
     def getTools(self):
         return self.toolsmanager.getTools()
 
+    def getToolsByName(self):
+        res = {}
+        alltools = self.getTools()
+        for tool in alltools:
+            if tool.name in res:
+                res[tool.name].append(tool)
+            else:
+                res[tool.name] = [tool]
+        return res
+
+    def getToolKeys(self):
+        return list(self.getToolsByName().keys())
+
+    def getOtherKeysByName(self):
+        return list(self.getOtherToolsByName().keys())
+
+    def getUniqueToolsByName(self):
+        res = []
+        alltools = self.getToolsByName()
+        for name in alltools.keys():
+            if len(alltools[name]) == 1:
+                res.append(alltools[name][0])
+        return res
+
+    def getOtherToolsByName(self):
+        res = {}
+        alltools = self.getToolsByName()
+        for name in alltools.keys():
+            if len(alltools[name]) != 1:
+                res[name] = alltools[name]
+        return res
+    
+    def getUniqueTools(self):
+        alltools = self.getTools()
+        return [tool for tool in alltools if tool.nbRuns() == 1]
+
     def getToolRuns(self, which = []):
         return self.toolsmanager.getToolRuns(which)
 

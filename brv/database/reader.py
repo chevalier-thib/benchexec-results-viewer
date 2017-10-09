@@ -50,7 +50,10 @@ class DatabaseReader(DatabaseProxy):
             info._options = r[4]
             info._timelimit = r[5]
             info._memlimit = r[6]
-            info._tags = r[7]
+            if r[7] == None:
+                info._tags = 0
+            else:
+                info._tags = int(r[7])
             info._description = r[8]
             info._tool_id = r[9]
 
@@ -91,7 +94,6 @@ class DatabaseReader(DatabaseProxy):
         SELECT status, cputime, walltime, memusage, classification, exitcode, property, file
         FROM run WHERE tool_run_id = '{0}' AND benchmarks_set_id = '{1}'; 
         """.format(tool_run_id, bset_id);
-        print(q)
         # FIXME: use fetchone
         res = self.query(q)
         ret = []

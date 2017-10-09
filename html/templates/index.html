@@ -20,31 +20,46 @@
      <a href="delete">Delete tools (admin)</a><p>
 <h2>Tools:</h2>
 <form action="/results" style="margin-left: 1em">
-  #for @tool in @tools:
-    <h3>@tool.name:</h3>
-    <select name="run" multiple="multiple" size=
-      #if (@tool.nbRuns()>4)
-        4
-      #else
-        @tool.nbRuns()
+  #for @name in @otherKeys:
+    <h3>@name</h3>
+    <select name="run" multiple="multiple">
+    #for @tool in @otherTools.get(@name):
+    
+      #for @run in @tool.getRuns():
+          <option style="
+          #if (@run.tags() % 2)
+            font-weight:bold;
+          #end
+          #if ((@run.tags() / 2) % 2 >= 1)
+            font-style:italic;
+          #end
+          #if ((@run.tags() / 4 % 2) >= 1)
+            color:red;
+          #end
+          " value="@run.getID()">[@run.date()] @run.tool() : @run.description()</option>
       #end
-      >
+    #end
+    </select>
+  <br/>
+  #end
+  <h3>Others</h3>
+  <select name="run" multiple="multiple">
+  #for @tool in @uniqueTools:
     #for @run in @tool.getRuns():
         <option style="
         #if (@run.tags() % 2)
           font-weight:bold;
         #end
-        #if ((@run.tags() / 2) % 2)
+        #if ((@run.tags() / 2) % 2 >= 1)
           font-style:italic;
         #end
         #if ((@run.tags() / 4 % 2) >= 1)
           color:red;
         #end
-        " value="@run.getID()">[@run.date()] @run.tool() @run.tool_version()</option>
+        " value="@run.getID()">[@run.date()] @run.tool() : @run.description()</option>
     #end
-    </select>
-  <br/>
   #end
+  </select>
   <input type="submit" value="Show!">
 </form>
 

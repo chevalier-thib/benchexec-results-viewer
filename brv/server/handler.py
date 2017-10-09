@@ -29,7 +29,10 @@ def _render_template(wfile, name, variables):
 
 def showRoot(wfile, args):
     datamanager.refresh()
-    _render_template(wfile, 'index.html', {'tools' : datamanager.getTools()})
+    _render_template(wfile, 'index.html', {'tools' : datamanager.getTools(),
+                                           'otherTools' : datamanager.getOtherToolsByName(),
+                                           'uniqueTools' : datamanager.getUniqueToolsByName(),
+                                           'otherKeys' : datamanager.getOtherKeysByName()})
 
 def _parse_args(args):
     opts = {}
@@ -177,23 +180,32 @@ def showBenchmarksResults(wfile, args):
 
 def showTools(wfile, args):
     opts = _parse_args(args)
+    if 'delete' in opts:
+        from .. database.writer import DatabaseWriter
+        writer = DatabaseWriter('database.conf')
+        writer.deleteTool(int(opts['delete'][0]))
+
+        writer.commit()
+
     if 'desc' in opts:
         from .. database.writer import DatabaseWriter
         writer = DatabaseWriter('database.conf')
         ftag = 0
-        for tag in opts['tags']:
-            if tag == "bold":
-                ftag += 1
-            if tag == "italics":
-                ftag += 2
-            if tag == "red":
-                ftag += 4
-        writer.setDesc(opts['run'][0], opts['desc'][0])
+        if 'tags' in opts:
+            for tag in opts['tags']:
+                if tag == "bold":
+                    ftag += 1
+                if tag == "italics":
+                    ftag += 2
+                if tag == "red":
+                    ftag += 4
+        writer.setDesc(opts['run'][0], opts['desc'][0].replace('+', ' '))
         writer.setTags(opts['run'][0], ftag)
     
     datamanager.refresh()
 
-    _render_template(wfile, 'tools.html', {'tools' : datamanager.getTools() })
+    _render_template(wfile, 'tools.html', {'tools' : datamanager.getToolsByName(),
+                                           'toolKeys' : datamanager.getToolKeys() })
     
 
 def sendStyle(wfile):

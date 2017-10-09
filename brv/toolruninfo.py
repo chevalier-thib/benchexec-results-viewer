@@ -86,7 +86,10 @@ class DBToolRunInfo(ToolRunInfo):
         return self._tags
 
     def description(self):
-        return self._description
+        if self._description:
+            return self._description
+        else:
+            return ""
 
     def date(self):
         return self._date

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+   tools.html template
+
+   Author: Marek Chalupa <xchalup4@fi.muni.cz>, 2017
+-->
+
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="../style.css">
+<title>Benchexec results viewer</title>
+</head>
+
+<script>
+function show(name) {
+  if (document.getElementById(name).style.display == "block")
+    document.getElementById(name).style.display="none";
+  else
+    document.getElementById(name).style.display="block";
+}
+function showField(name) {
+  document.getElementById(name).getElementsByClassName('field')[0].style.display="block";
+}
+</script>
+
+<body>
+
+#include("../header.html")
+<div id="content">
+<h2>Tools:</h2>
+
+  #for @name in @toolKeys:
+  <h3>@name :</h3>
+    #for @tool in @tools.get(@name):
+    #for @run in @tool.getRuns():
+    <div style="margin-left: 1em">
+    <p style="cursor:pointer; font-weight: bold" onclick="show('@run.getID()')">[@run.date()] @tool.name @tool.version</p>
+      <div style="display:none" id='@run.getID()'>
+        <p>Description : @!run.description()</p>
+        <button onclick="showField('@run.getID()')" style="display:inline">Edit</button>
+        <form action="">
+          <input name="delete" value='@run.getID()' style="display:none">
+          <input type="submit" onclick="return confirm('Are you sure you want to delete this run ?');" value="Delete" style="display:inline">
+        </form>
+        <div style="display:none" class="field">
+          <form action="" style="margin-left: 1em">
+            <input name="run" value='@run.getID()' style="display:none">
+            <p>Description: <input type="text" name="desc" value='@!run.description()'></p>
+            <fieldset>
+              <legend>Which tags do you want ?</legend>
+              <div>
+                <input type="checkbox" id="bold" name="tags" value="bold"
+                #if (@run.tags() % 2)
+                 checked
+                #end
+                >
+                <label for="bold">Bold</label>
+              </div>
+              <div>
+                <input type="checkbox" id="italics" name="tags" value="italics"
+                #if ((@run.tags() / 2) % 2 >= 1)
+                 checked
+                #end
+                >
+                <label for="italics">Italics</label>
+              </div>
+              <div>
+                <input type="checkbox" id="red" name="tags" value="red"
+                #if ((@run.tags() / 4) % 2 >= 1)
+                 checked
+                #end
+                >
+                <label for="red">Red</label>
+              </div>
+            </fieldset>
+            <input type="submit" value="Save">
+          </form>
+        </div>
+      </div>
+    </div>
+
+    #end
+  #end
+#end
+
+</div> <!-- content -->
+</body>
+
+</html>

@@ -197,7 +197,6 @@ handlers = {
     'root'              : showRoot,
     'results'           : showResults,
     'benchmarks_results': showBenchmarksResults,
-    'delete'            : deleteTools,
     'tools'             : showTools,
     'style.css'         : None, # we handle this specially
 }
